@@ -8,26 +8,26 @@ locals {
 ######
 # VPC
 ######
-resource "aws_vpc" "this" {  
+resource "aws_vpc" "this" {
 
-  cidr_block                       = var.cidr  
-  enable_dns_hostnames             = var.enable_dns_hostnames
-  enable_dns_support               = var.enable_dns_support
-  
+  cidr_block           = var.cidr
+  enable_dns_hostnames = var.enable_dns_hostnames
+  enable_dns_support   = var.enable_dns_support
+
 
   tags = merge(
     {
       "Name" = format("%s", var.name)
     },
-    var.tags,    
+    var.tags,
   )
 }
 #####
 # Default route
 #####
 resource "aws_default_route_table" "default" {
-  default_route_table_id = aws_vpc.this.default_route_table_id  
-  
+  default_route_table_id = aws_vpc.this.default_route_table_id
+
   tags = merge(
     { "Name" = var.name },
     var.tags,
@@ -51,7 +51,7 @@ resource "aws_route_table" "public" {
   )
 }
 
-resource "aws_route" "public_internet_gateway" {  
+resource "aws_route" "public_internet_gateway" {
 
   route_table_id         = aws_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
@@ -78,7 +78,7 @@ resource "aws_route_table" "private" {
         element(var.zones, count.index),
       )
     },
-    var.tags,    
+    var.tags,
   )
 }
 
@@ -89,10 +89,10 @@ resource "aws_route_table" "private" {
 resource "aws_subnet" "public" {
   count = length(var.public_subnets)
 
-  vpc_id                          = aws_vpc.this.id
-  cidr_block                      = element(var.public_subnets, count.index)
-  availability_zone               = element(var.zones, count.index)  
-  
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = element(var.public_subnets, count.index)
+  availability_zone = element(var.zones, count.index)
+
   tags = merge(
     {
       "Name" = format(
@@ -101,7 +101,7 @@ resource "aws_subnet" "public" {
         element(var.zones, count.index),
       )
     },
-    var.tags,    
+    var.tags,
   )
 }
 
@@ -111,10 +111,10 @@ resource "aws_subnet" "public" {
 resource "aws_subnet" "private" {
   count = length(var.private_subnets)
 
-  vpc_id                          = aws_vpc.this.id
-  cidr_block                      = var.private_subnets[count.index]
-  availability_zone               = var.zones[count.index]  
-  
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = var.private_subnets[count.index]
+  availability_zone = var.zones[count.index]
+
   tags = merge(
     {
       "Name" = format(
@@ -123,14 +123,14 @@ resource "aws_subnet" "private" {
         element(var.zones, count.index),
       )
     },
-    var.tags,    
+    var.tags,
   )
 }
 
 ####
 # Internet Gateway
 ####
-resource "aws_internet_gateway" "this" {  
+resource "aws_internet_gateway" "this" {
 
   vpc_id = aws_vpc.this.id
 
@@ -163,7 +163,7 @@ resource "aws_eip" "nat" {
         element(var.zones, var.single_nat_gateway ? 0 : count.index),
       )
     },
-    var.tags,    
+    var.tags,
   )
 }
 
@@ -187,7 +187,7 @@ resource "aws_nat_gateway" "this" {
         element(var.zones, var.single_nat_gateway ? 0 : count.index),
       )
     },
-    var.tags,    
+    var.tags,
   )
 
   depends_on = [aws_internet_gateway.this]
@@ -210,7 +210,7 @@ resource "aws_route" "private_nat_gateway" {
 ##########################
 
 resource "aws_route_table_association" "public" {
-  count = length(var.public_subnets) > 0 ? length(var.public_subnets) : 0
+  count          = length(var.public_subnets) > 0 ? length(var.public_subnets) : 0
   subnet_id      = element(aws_subnet.public.*.id, count.index)
   route_table_id = aws_route_table.public.id
 }
