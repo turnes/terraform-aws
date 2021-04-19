@@ -1,7 +1,20 @@
 # terraform-aws
-Some modules for terraform
+- VPC
+- Fargate/ECS
+- Elastic Load Balancer
+- CloudWatch
+- S3
+- API Gateway
+- Lambda
+- NAT Gateway
+- Elastic Cache
 
-## VPC
+## Considerations
+
+- [VPC Endpoints for ECS/Fargate](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/vpc-endpoints.html)
+- 
+
+## Module VPC
 - [x] Zones
 - [x] DNS hostnames
 - [x] enable_dns_support
@@ -12,14 +25,19 @@ Some modules for terraform
 - [X] Single NAT Gateway
 - [X] Multiple NAT Gateway
 - [X] Map existing EIP to NAT Gateway
-- [ ] Endpoints
-
 ## Module Security Group
 - [x] Create
 - [x] VPC
 - [x] Ingress/Egress rule by cidr blocks 
 - [x] Ingress/Egress rule by security group id
 - [x] Tags
+
+
+## Module VPC Endpoint
+  - [ ] S3 endpoint (Interface)
+  - [ ] ECR endpoint (Interface)
+  - [ ] Amazon CloudWatch Logs (Interface)
+  - [ ] DynamoDB (Gateway)
 
 
 ## Module ELB Elastic Load Balancer (ALB e NLB)

@@ -60,6 +60,27 @@ variable "idle_timeout" {
   default     = 60
 }
 
+variable "target_groups" {
+  description = "A list of maps"
+  type        = any
+  default     = []
+
+}
+
+variable "listener" {
+  description = "A list of maps"
+  type        = any
+  default     = []
+
+}
+
+variable "vpc_id" {
+  description = "VPC id"
+  type        = string
+  default     = null
+
+}
+
 variable "tags" {
   description = "A map of tags to assign to the resource."
   type        = map(string)
